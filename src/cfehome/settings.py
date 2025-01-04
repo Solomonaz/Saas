@@ -14,8 +14,33 @@ from pathlib import Path
 import os
 from decouple import config
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+#Email Config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config("EMAIL_HOST",cast=str, default = "smtp.gmail.com")
+EMAIL_PORT = config("EMAIL_PORT",cast=str, default = "587")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS",cast=str, default = True)
+EMAIL_USE_SSl = config("EMAIL_USE_SSl",cast=str, default = False)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER",cast=str, default = None)
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD",cast=str, default = None)
+
+#500 errors
+ADMIN_USER_NAME = config('ADMIN_USER_NAME', default = 'Admin User')
+ADMIN_USER_EMAIL = config('ADMIN_USER_EMAIL', default = 'None')
+
+MANAGERS = []
+ADMINS = []
+if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
+    #500 err0rs are emailed to this user
+    ADMINS +=[
+        (f'{ADMIN_USER_NAME}', f'{ADMIN_USER_EMAIL}')
+    ]
+    MANAGERS=ADMINS
+# ADMINS = [('Solomon', 'solomonaz2022@gmail.com')]
+# MANAGERS = ADMINS
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +70,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -141,6 +167,14 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "local-cdn"
+#STATICFILES_STORAGES = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
