@@ -65,7 +65,15 @@ INSTALLED_APPS = [
 
     'commando',
     'visits',
-]
+    "allauth_ui",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    "widget_tweaks",
+    "slippers",
+
+
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,6 +83,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -141,6 +150,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_AUTHENTICATION_METHOD  = 'email'
+ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[CFE]"
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
